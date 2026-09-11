@@ -1,0 +1,7 @@
+# Floci's runtime state (bind-mounted, regenerated every `docker compose up`).
+data/
+# mdBook's build output.
+book/book/
+# Python bytecode cache.
+__pycache__/
+*.pyc

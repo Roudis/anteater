@@ -1,0 +1,31 @@
+[project]
+name = "cloud-security-compliance"
+version = "0.1.0"
+description = "Your compliance-as-code scanner for the Acme Health exercises."
+authors = [
+    { name = "Juan Chaves", email = "23042224+juanchaves@users.noreply.github.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "boto3>=1.43.70",
+    "kubernetes>=36.0.3",
+]
+
+[project.scripts]
+cloud-security-compliance = "cloud_security_compliance:main"
+
+[build-system]
+requires = ["uv_build>=0.12.2,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "faker>=40.36.0",
+    "hypothesis>=6.165.5",
+    "moto>=5.2.2",
+    "mutmut>=3.7.0",
+    "pytest>=9.1.1",
+    "pytest-bdd>=8.1.0",
+    "pytest-cov>=7.1.0",
+    "time-machine>=3.4.0",
+]

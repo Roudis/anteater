@@ -1,0 +1,17 @@
+# Floci — local AWS emulator. Pinned by digest per course policy: never track
+# :latest in delivered material. This is the exact image POC-01 verified the
+# Acme Health exercise-1 stacks apply cleanly against.
+services:
+  floci:
+    image: floci/floci@sha256:eab36252ea43a4a73928423f0372219052c5c6f87207f6c4754db14b91d6ed30
+    ports:
+      - "4566:4566"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock   # required: Lambda, RDS, EC2
+      - ./data:/app/data
+    environment:
+      FLOCI_STORAGE_MODE: hybrid
+      # NOTE: the `test` access key and any UNKNOWN key bypass IAM enforcement
+      # entirely. Not relevant to this exercise's static checks, but real
+      # once a later exercise does live IAM testing.
+      FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED: "true"

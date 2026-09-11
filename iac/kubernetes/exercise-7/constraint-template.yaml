@@ -1,0 +1,43 @@
+# Given, not part of the flaw: this ConstraintTemplate defines a reusable
+# admission rule (requiring specific labels on a resource) in Rego, the
+# language Gatekeeper's admission control runs on. Rego is prior art in
+# this course (mentioned for comparison, not a required skill) — you're
+# not asked to write or modify this. What you configure is which labels
+# it requires and which resources it applies to, via a *Constraint*
+# object that references this template. See pods.yaml and this
+# directory's README for what's actually missing.
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequiredlabels
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequiredLabels
+      validation:
+        openAPIV3Schema:
+          type: object
+          properties:
+            labels:
+              type: array
+              items:
+                type: string
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package k8srequiredlabels
+        violation[{"msg": msg}] {
+          provided := {label | input.review.object.metadata.labels[label]}
+          required := {label | label := input.parameters.labels[_]}
+          missing := required - provided
+          count(missing) > 0
+          msg := sprintf("missing required label: %v", [missing])
+        }
+
+# SEEDED FLAW 7 — there is no Constraint object in this directory. A
+# ConstraintTemplate on its own enforces nothing; it's a rule definition,
+# not an active policy. Verified 2026-09-10, live: with this template
+# applied and zero Constraint objects referencing it, a pod with no labels
+# at all is admitted without resistance. Nothing in this cluster stops a
+# non-compliant resource from being created.

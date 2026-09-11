@@ -1,0 +1,7 @@
+.terraform/
+*.tfplan
+tfplan
+terraform.tfstate*
+crash.log
+crash.*.log
+committed-credentials.env

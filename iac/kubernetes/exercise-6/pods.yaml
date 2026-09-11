@@ -1,0 +1,34 @@
+# SEEDED FLAW 6 — two pods, no NetworkPolicy at all. Kubernetes' own
+# default is fully permissive: with zero NetworkPolicy objects in a
+# namespace, every pod can reach every other pod, unrestricted. Verified
+# 2026-09-10 against Floci's k3s (matches this project's original POC-06
+# finding, reproduced live before this exercise was built): traffic
+# between these two pods succeeds by default.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: claims-api
+  labels:
+    app: claims-api
+spec:
+  containers:
+    - name: claims-api
+      image: nginx:alpine
+      ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: analytics-worker
+  labels:
+    app: analytics-worker
+spec:
+  containers:
+    - name: analytics-worker
+      image: alpine
+      command: ["sleep", "3600"]
+
+# No NetworkPolicy resource in this file -> SEEDED FLAW 6. Nothing stops
+# analytics-worker (or anything else in this namespace) from reaching
+# claims-api directly.
