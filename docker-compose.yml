@@ -12,6 +12,26 @@ services:
     environment:
       FLOCI_STORAGE_MODE: hybrid
       # NOTE: the `test` access key and any UNKNOWN key bypass IAM enforcement
-      # entirely. Not relevant to this exercise's static checks, but real
       # once a later exercise does live IAM testing.
       FLOCI_SERVICES_IAM_ENFORCEMENT_ENABLED: "true"
+
+  backend:
+    build:
+      context: ./tool
+    ports:
+      - "8000:8000"
+    environment:
+      - AWS_ENDPOINT_URL=http://floci:4566
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+    depends_on:
+      - floci
+
+  frontend:
+    build:
+      context: ./webapp
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
