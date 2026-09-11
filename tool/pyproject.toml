@@ -9,6 +9,8 @@ requires-python = ">=3.14"
 dependencies = [
     "boto3>=1.43.70",
     "kubernetes>=36.0.3",
+    "fastapi>=0.115.0",
+    "uvicorn>=0.32.0",
 ]
 
 [project.scripts]

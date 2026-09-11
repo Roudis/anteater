@@ -1,2 +1,4 @@
-def main() -> None:
-    print("Hello from cloud-security-compliance!")
+def hello() -> str:
+    return "Hello from cloud-security-compliance!"
+
+from .main import main
